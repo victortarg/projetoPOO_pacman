@@ -42,11 +42,12 @@ public class JogoCenario extends CenarioPadrao {
 		super(largura, altura);
 	}
 
-	private ImageIcon fundo;
+	private ImageIcon fundo; //TENTAR BOTAR UMA IMAGEM DE FUNDO
 
 	private int largEl;
+	private int largVidas;
 
-	private int espLinha = 6; // Espa�o grossura linha
+	private int espLinha = 6; // Espaço grossura linha
 
 	public static final int ESPACO_TOPO = 25; // Espacamento topo
 
@@ -60,13 +61,14 @@ public class JogoCenario extends CenarioPadrao {
 	private int pontoVoltaLin;
 
 	private boolean superPizza;
-	Vidas vidas = new Vidas(10, 530, largEl, largEl);
+	Vidas vidas = new Vidas();
 
 	@Override
 	public void carregar() {
 		grade = Nivel.cenario; // copiaNivel(Nivel.cenario);
 
 		largEl = largura / grade[0].length; // 16px
+
 
 		texto.setCor(Color.WHITE);
 
@@ -157,7 +159,7 @@ public class JogoCenario extends CenarioPadrao {
 		return temp;
 	}
 
-	public void reiniciar() {
+	public void reiniciar() { //FAZER UM OVERRIDE DESSA FUNÇÃO QUANDO O JOGADOR COMER TODAS AS BOLINHAS
 		superPizza = false;
 		temporizadorFantasma = 0;
 		prxDirecao = Direcao.OESTE;
@@ -208,7 +210,7 @@ public class JogoCenario extends CenarioPadrao {
 	}
 
 	@Override
-	public void descarregar() { // OLHAR O QUE ESSA FUNÇÃO FAZ !!!!!!!
+	public void descarregar() { // PARA DE ATULIZAR O JOGO, FICA EM ESPERA
 		pizza = null;
 		grade = null;
 		inimigos = null;
@@ -255,15 +257,17 @@ public class JogoCenario extends CenarioPadrao {
 			corrigePosicao(el);
 			el.atualiza();
 
-			if (Util.colide(pizza, el)) {
+			if (Util.colide(pizza, el)) { //PIZZA É REFERENTE AO PACMAN, EL É O INIMIGO
 
 				if (el.getModo() == Pizza.Modo.CACANDO) {
 
 					if (vidas.getQntVidas() == 0){
 						//JOGADOR PERDEU TODAS AS VIDAS, CABOU O JOGO!
+						//FAZER AQUI UMA TELA DE GAMEOVER !!!!
+						System.out.println("PERDEU");
 					} else {
 						reiniciar(); // Jogador perdeu
-						vidas.getQntVidas();
+						vidas.setQntVidas(vidas.getQntVidas() - 1);
 					}
 				} else if (el.getModo() == Pizza.Modo.FUGINDO) {
 					el.setAtivo(false);
@@ -667,8 +671,14 @@ public class JogoCenario extends CenarioPadrao {
 		}
 
 		texto.desenha(g, "Pontos: " + pontos, 10, 20);
-//		texto.desenha(g,"Vidas:", 10, 540); //escrever coisas na tela
-		vidas.desenha(g);
+		//		texto.desenha(g,"Vidas:", 10, 540); //escrever coisas na tela
+
+		largVidas = largEl;
+		//FAZER AQUI A LOGICA DE SUMIR COM AS VIDAS NA TELA !!!!
+		vidas.desenha(g, 10, 527,  16, 16);
+		vidas.desenha(g, 30, 527, 16, 16);
+		vidas.desenha(g, 50, 527, 16, 16);
+
 		pizza.desenha(g);
 
 		for (Elemento el : inimigos) {

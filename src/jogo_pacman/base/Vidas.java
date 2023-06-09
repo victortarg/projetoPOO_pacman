@@ -15,15 +15,15 @@ public class Vidas extends Elemento{
         this.qntVidas = qntVidas;
     }
 
-    public Vidas(int px, int py, int largura, int altura) {
-        super(px, py, largura, altura);
+    public Vidas() {
+
     }
-    @Override
-    public void desenha(Graphics2D g) {
+
+    public void desenha(Graphics2D g, int px, int py, int largura, int altura) {
 
         g.setColor(Color.YELLOW);
-        g.drawOval(getPx(), getPy(), getLargura(), getAltura());
-        g.fillOval(getPx(), getPy(), getLargura(), getAltura());
+        g.drawOval(px, py, largura, altura);
+        g.fillOval(px, py, largura, altura);
 
     }
 }

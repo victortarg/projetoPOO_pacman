@@ -93,12 +93,12 @@ public class Jogo extends JFrame {
 
 		g2d = buffer.createGraphics();
 
-		tela = new JPanel() {
+		tela = new JPanel() { // painel principal
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paintComponent(Graphics g) {
-				g.drawImage(buffer, 0, 0, null);
+				g.drawImage(buffer, 0, 0, null); // vai desenhar meus jogo
 			}
 
 			@Override
@@ -116,8 +116,8 @@ public class Jogo extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();
-
 		setVisible(true);
+
 		tela.repaint();
 
 	}
@@ -133,24 +133,28 @@ public class Jogo extends JFrame {
 		while (true) {
 			if (System.currentTimeMillis() >= prxAtualizacao) {
 
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
+
 //				ImageIcon fundoMenu = new ImageIcon("imagem\\testePACMAN.png");
 //				g2d.drawImage(fundoMenu.getImage(), JANELA_LARGURA, JANELA_ALTURA, null);
 
 				g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
 
 				if (controleTecla[Tecla.BA.ordinal()]) {
-					// Pressionou espa�o ou enter
+					// Pressionou Enter, VAI INICIAR O JOGO, FAZ A TROCA DE TELA.
 					if (cenario instanceof InicioCenario) {
 						cenario.descarregar();
 						cenario = null;
 						cenario = new JogoCenario(tela.getWidth(), tela.getHeight());
+
 
 						g2d.setColor(Color.WHITE);
 						g2d.drawString("Carregando...", 20, 20);
 						tela.repaint();
 
 						cenario.carregar();
+
+						System.out.println("Executou !!");
 
 					} else {
 						Jogo.pausado = !Jogo.pausado;
@@ -164,6 +168,7 @@ public class Jogo extends JFrame {
 						cenario.descarregar();
 
 						cenario = null;
+
 						cenario = new InicioCenario(tela.getWidth(), tela.getHeight());
 						cenario.carregar();
 					}
@@ -175,6 +180,7 @@ public class Jogo extends JFrame {
 				if (cenario == null) {
 					g2d.setColor(Color.WHITE);
 					g2d.drawString("Carregando...", 20, 20);
+
 
 				} else {
 					if (!Jogo.pausado)
