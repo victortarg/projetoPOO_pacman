@@ -164,9 +164,9 @@ public class Jogo extends JFrame {
 
 				} else if (controleTecla[Tecla.BB.ordinal()]) {
 					// Pressionou ESQ
-					if (!(cenario instanceof InicioCenario)) {
-						cenario.descarregar();
+					if (!(cenario instanceof InicioCenario)) { //LOGICA QUE FAZ COM QUE O CENARIO SUMA DEPOIS DE APERTAR ESQ
 
+						cenario.descarregar();
 						cenario = null;
 
 						cenario = new InicioCenario(tela.getWidth(), tela.getHeight());

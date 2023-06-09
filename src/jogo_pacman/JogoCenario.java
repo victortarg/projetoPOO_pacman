@@ -210,7 +210,7 @@ public class JogoCenario extends CenarioPadrao {
 	}
 
 	@Override
-	public void descarregar() { // PARA DE ATULIZAR O JOGO, FICA EM ESPERA
+	public void descarregar() { // PARA DE ATUALIZAR O JOGO, FICA EM ESPERA
 		pizza = null;
 		grade = null;
 		inimigos = null;
@@ -260,7 +260,7 @@ public class JogoCenario extends CenarioPadrao {
 			if (Util.colide(pizza, el)) { //PIZZA É REFERENTE AO PACMAN, EL É O INIMIGO
 
 				if (el.getModo() == Pizza.Modo.CACANDO) {
-
+					//FAZER AQUI O RESET DO JOGO CASO O JOGADOR COMA TODAS AS PASTILHAS ???????
 					if (vidas.getQntVidas() == 0){
 						//JOGADOR PERDEU TODAS AS VIDAS, CABOU O JOGO!
 						//FAZER AQUI UMA TELA DE GAMEOVER !!!!
@@ -671,13 +671,21 @@ public class JogoCenario extends CenarioPadrao {
 		}
 
 		texto.desenha(g, "Pontos: " + pontos, 10, 20);
-		//		texto.desenha(g,"Vidas:", 10, 540); //escrever coisas na tela
+		//texto.desenha(g,"Vidas:", 10, 540); //escrever coisas na tela
 
-		largVidas = largEl;
 		//FAZER AQUI A LOGICA DE SUMIR COM AS VIDAS NA TELA !!!!
-		vidas.desenha(g, 10, 527,  16, 16);
-		vidas.desenha(g, 30, 527, 16, 16);
-		vidas.desenha(g, 50, 527, 16, 16);
+
+		if (vidas.getQntVidas() == 3) {
+			vidas.desenha(g, 10, 527,  16, 16); //mais a esquerda - terceira
+			vidas.desenha(g, 30, 527, 16, 16); //do meio - segunda
+			vidas.desenha(g, 50, 527, 16, 16); //mais a direita - primeira
+		} else if (vidas.getQntVidas() == 2) {
+			vidas.desenha(g, 10, 527,  16, 16); //mais a esquerda - terceira
+			vidas.desenha(g, 30, 527, 16, 16); //do meio - segunda
+		} else if (vidas.getQntVidas() == 1) {
+			vidas.desenha(g, 10, 527,  16, 16); //mais a esquerda - terceira
+		}
+
 
 		pizza.desenha(g);
 

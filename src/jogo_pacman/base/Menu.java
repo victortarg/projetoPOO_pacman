@@ -17,7 +17,7 @@ public class Menu extends Texto {
 
 		setLargura(120);
 		setAltura(20);
-		setCor(Color.RED);
+		setCor(Color.WHITE);
 	}
 
 	public void addOpcoes(String... opcao) {
@@ -32,6 +32,7 @@ public class Menu extends Texto {
 
 		g.setColor(getCor());
 		super.desenha(g, String.format("%s: [%s]", getRotulo(), opcoes[idx]), getPx(), getPy() + getAltura()); //IMPORTANTE
+
 
 
 		if (selecionado) {
