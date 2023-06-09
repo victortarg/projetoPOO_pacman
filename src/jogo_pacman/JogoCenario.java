@@ -74,8 +74,9 @@ public class JogoCenario extends CenarioPadrao {
 
    		//fundo = new ImageIcon("imagem/fundo_original.png");
 
+		//pacman
 		pizza = new Pizza(0, 0, largEl, largEl); //Criando a bolinha com os parematros, (px,py, altura e largura)
-		pizza.setVel(4); // setando a velocidade de movimento do pacman
+		pizza.setVel(10); // setando a velocidade de movimento do pacman
 		pizza.setAtivo(true); //Ativa ou desativa a colisão
 		pizza.setCor(Color.YELLOW); //setando a cor do pacman
 		pizza.setDirecao(Direcao.OESTE); //nao sei para que serve isso !!
@@ -83,28 +84,28 @@ public class JogoCenario extends CenarioPadrao {
 		// Inimigos
 		inimigos = new Pizza[4];
 
-		inimigos[0] = new Pizza(0, 0, largEl, largEl);
+		inimigos[0] = new Pizza(0, 0, largEl, largEl); //Vermelho
 		inimigos[0].setVel(3 + Jogo.nivel);
 		inimigos[0].setAtivo(true);
 		inimigos[0].setCor(Color.RED);
 		inimigos[0].setDirecao(Direcao.OESTE);
 		inimigos[0].setModo(Pizza.Modo.CACANDO);
 
-		inimigos[1] = new Pizza(0, 0, largEl, largEl);
+		inimigos[1] = new Pizza(0, 0, largEl, largEl); //Rosa
 		inimigos[1].setVel(2 + Jogo.nivel);
 		inimigos[1].setAtivo(false);
 		inimigos[1].setCor(Color.PINK);
 		inimigos[1].setDirecao(Direcao.NORTE);
 		inimigos[1].setModo(Modo.PRESO);
 
-		inimigos[2] = new Pizza(0, 0, largEl, largEl);
+		inimigos[2] = new Pizza(0, 0, largEl, largEl); //Laranja
 		inimigos[2].setVel(2 + Jogo.nivel);
 		inimigos[2].setAtivo(false);
 		inimigos[2].setCor(Color.ORANGE);
 		inimigos[2].setDirecao(Direcao.NORTE);
 		inimigos[2].setModo(Modo.PRESO);
 
-		inimigos[3] = new Pizza(0, 0, largEl, largEl);
+		inimigos[3] = new Pizza(0, 0, largEl, largEl); //Ciano
 		inimigos[3].setVel(2 + Jogo.nivel);
 		inimigos[3].setAtivo(false);
 		inimigos[3].setCor(Color.CYAN);
@@ -114,8 +115,7 @@ public class JogoCenario extends CenarioPadrao {
 		for (int lin = 0; lin < grade.length; lin++) {
 			for (int col = 0; col < grade[0].length; col++) {
 				if (grade[lin][col] == Nivel.CN || grade[lin][col] == Nivel.SC) {
-					totalPastilha++;
-
+					totalPastilha++; //270
 				} else if (grade[lin][col] == Nivel.PI) {
 					pizza.setPx(converteInidicePosicao(col));
 					pizza.setPy(converteInidicePosicao(lin));
@@ -265,6 +265,7 @@ public class JogoCenario extends CenarioPadrao {
 						//JOGADOR PERDEU TODAS AS VIDAS, CABOU O JOGO!
 						//FAZER AQUI UMA TELA DE GAMEOVER !!!!
 						System.out.println("PERDEU");
+						//estado = Estado.PERDEU;
 					} else {
 						reiniciar(); // Jogador perdeu
 						vidas.setQntVidas(vidas.getQntVidas() - 1);
@@ -575,6 +576,58 @@ public class JogoCenario extends CenarioPadrao {
 		el.setPy(novaPy);
 	}
 
+	public void reiniciarComVitoria() {
+		superPizza = false;
+		temporizadorFantasma = 0;
+		prxDirecao = Direcao.OESTE;
+
+		pizza.setDirecao(Direcao.OESTE);
+
+		inimigos[0].setDirecao(Direcao.OESTE);
+		inimigos[0].setModo(Pizza.Modo.CACANDO);
+		inimigos[0].setAtivo(true);
+
+		inimigos[1].setDirecao(Direcao.NORTE);
+		inimigos[1].setModo(Pizza.Modo.PRESO);
+		inimigos[1].setAtivo(false);
+
+		inimigos[2].setDirecao(Direcao.NORTE);
+		inimigos[2].setModo(Pizza.Modo.PRESO);
+		inimigos[2].setAtivo(false);
+
+		inimigos[3].setDirecao(Direcao.NORTE);
+		inimigos[3].setModo(Pizza.Modo.PRESO);
+		inimigos[3].setAtivo(false);
+
+		for (int lin = 0; lin < grade.length; lin++) {
+			for (int col = 0; col < grade[0].length; col++) {
+				if (grade[lin][col] == Nivel.PI) {
+					pizza.setPx(converteInidicePosicao(col));
+					pizza.setPy(converteInidicePosicao(lin));
+
+				} else if (grade[lin][col] == Nivel.P1) {
+					inimigos[0].setPx(converteInidicePosicao(col));
+					inimigos[0].setPy(converteInidicePosicao(lin));
+
+				} else if (grade[lin][col] == Nivel.P2) {
+					inimigos[1].setPx(converteInidicePosicao(col));
+					inimigos[1].setPy(converteInidicePosicao(lin));
+
+				} else if (grade[lin][col] == Nivel.P3) {
+					inimigos[2].setPx(converteInidicePosicao(col));
+					inimigos[2].setPy(converteInidicePosicao(lin));
+
+				} else if (grade[lin][col] == Nivel.P4) {
+					inimigos[3].setPx(converteInidicePosicao(col));
+					inimigos[3].setPy(converteInidicePosicao(lin));
+
+				}
+			}
+		}
+
+
+	}
+
 	private void comePastilha(Elemento el) {
 		int col = convertePosicaoIndice(el.getPx());
 		int lin = convertePosicaoIndice(el.getPy());
@@ -587,10 +640,14 @@ public class JogoCenario extends CenarioPadrao {
 			pontos += grade[lin][col] == Nivel.CN ? 5 : 25;
 			totalPastilha--;
 
-			if (totalPastilha == 0)
-				estado = JogoCenario.Estado.GANHOU;
-			else if (grade[lin][col] == Nivel.SC)
+			if (totalPastilha == 0) {
+				estado = Estado.JOGANDO;
+				reiniciarComVitoria();
+
+
+			} else if (grade[lin][col] == Nivel.SC){
 				superPizza(true);
+			}
 
 			grade[lin][col] = Nivel.EV;
 		}
