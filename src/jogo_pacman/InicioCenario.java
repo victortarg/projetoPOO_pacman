@@ -48,6 +48,6 @@ public class InicioCenario extends CenarioPadrao {
 
 	@Override
 	public void desenhar(Graphics2D g) {
-		menuJogo.desenha(g);
+		menuJogo.desenha(g); //desenha o menu do jogo
 	}
 }

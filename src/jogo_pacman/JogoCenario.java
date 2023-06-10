@@ -1,13 +1,14 @@
 package jogo_pacman;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import jogo_pacman.Pizza.Modo;
 import jogo_pacman.base.*;
+
 
 public class JogoCenario extends CenarioPadrao {
 
@@ -42,10 +43,9 @@ public class JogoCenario extends CenarioPadrao {
 		super(largura, altura);
 	}
 
-	private ImageIcon fundo; //TENTAR BOTAR UMA IMAGEM DE FUNDO
+	private ImageIcon fundo;//= new ImageIcon("imagem/pngegg.png"); //TENTAR BOTAR UMA IMAGEM DE FUNDO
 
 	private int largEl;
-	private int largVidas;
 
 	private int espLinha = 6; // Espaço grossura linha
 
@@ -61,18 +61,19 @@ public class JogoCenario extends CenarioPadrao {
 	private int pontoVoltaLin;
 
 	private boolean superPizza;
-	Vidas vidas = new Vidas();
+	private Vidas vidas = new Vidas();
 
 	@Override
 	public void carregar() {
-		grade = Nivel.cenario; // copiaNivel(Nivel.cenario);
+//		grade = Nivel.cenario; // copiaNivel(Nivel.cenario);
+//		copiaNivel(Nivel.cenario); //Copiar o cenario original sem perder nda. Tentar usar para fazer o reset do mapa
+
+		grade = copiaNivel(Nivel.cenario);
 
 		largEl = largura / grade[0].length; // 16px
 
 
 		texto.setCor(Color.WHITE);
-
-   		//fundo = new ImageIcon("imagem/fundo_original.png");
 
 		//pacman
 		pizza = new Pizza(0, 0, largEl, largEl); //Criando a bolinha com os parematros, (px,py, altura e largura)
@@ -84,28 +85,32 @@ public class JogoCenario extends CenarioPadrao {
 		// Inimigos
 		inimigos = new Pizza[4];
 
-		inimigos[0] = new Pizza(0, 0, largEl, largEl); //Vermelho
+		//Vermelho
+		inimigos[0] = new Pizza(0, 0, largEl, largEl);
 		inimigos[0].setVel(3 + Jogo.nivel);
 		inimigos[0].setAtivo(true);
 		inimigos[0].setCor(Color.RED);
 		inimigos[0].setDirecao(Direcao.OESTE);
 		inimigos[0].setModo(Pizza.Modo.CACANDO);
 
-		inimigos[1] = new Pizza(0, 0, largEl, largEl); //Rosa
+		//Rosa
+		inimigos[1] = new Pizza(0, 0, largEl, largEl);
 		inimigos[1].setVel(2 + Jogo.nivel);
 		inimigos[1].setAtivo(false);
 		inimigos[1].setCor(Color.PINK);
 		inimigos[1].setDirecao(Direcao.NORTE);
 		inimigos[1].setModo(Modo.PRESO);
 
-		inimigos[2] = new Pizza(0, 0, largEl, largEl); //Laranja
+		//Laranja
+		inimigos[2] = new Pizza(0, 0, largEl, largEl);
 		inimigos[2].setVel(2 + Jogo.nivel);
 		inimigos[2].setAtivo(false);
 		inimigos[2].setCor(Color.ORANGE);
 		inimigos[2].setDirecao(Direcao.NORTE);
 		inimigos[2].setModo(Modo.PRESO);
 
-		inimigos[3] = new Pizza(0, 0, largEl, largEl); //Ciano
+		//Ciano
+		inimigos[3] = new Pizza(0, 0, largEl, largEl);
 		inimigos[3].setVel(2 + Jogo.nivel);
 		inimigos[3].setAtivo(false);
 		inimigos[3].setCor(Color.CYAN);
@@ -148,18 +153,19 @@ public class JogoCenario extends CenarioPadrao {
 		}
 	}
 
-	protected int[][] copiaNivel(int[][] cenario) {
+	public int[][] copiaNivel(int[][] cenario) {
+
 		int[][] temp = new int[cenario.length][cenario[0].length];
+
 		for (int lin = 0; lin < cenario.length; lin++) {
 			for (int col = 0; col < cenario[0].length; col++) {
 				temp[lin][col] = cenario[lin][col];
 			}
 		}
-
 		return temp;
 	}
 
-	public void reiniciar() { //FAZER UM OVERRIDE DESSA FUNÇÃO QUANDO O JOGADOR COMER TODAS AS BOLINHAS
+	public void reiniciar() {
 		superPizza = false;
 		temporizadorFantasma = 0;
 		prxDirecao = Direcao.OESTE;
@@ -218,7 +224,6 @@ public class JogoCenario extends CenarioPadrao {
 
 	@Override
 	public void atualizar() {
-
 		if (estado != Estado.JOGANDO) {
 			return;
 		}
@@ -258,18 +263,20 @@ public class JogoCenario extends CenarioPadrao {
 			el.atualiza();
 
 			if (Util.colide(pizza, el)) { //PIZZA É REFERENTE AO PACMAN, EL É O INIMIGO
-
+				//isso aqui ta dentro do metodo ATUALIZAR
 				if (el.getModo() == Pizza.Modo.CACANDO) {
-					//FAZER AQUI O RESET DO JOGO CASO O JOGADOR COMA TODAS AS PASTILHAS ???????
+					//FAZER AQUI O RESET DO JOGO CASO O JOGADOR COMA TODAS AS PASTILHAS ??????? SPOILER: NÃO É AQUI
 					if (vidas.getQntVidas() == 0){
 						//JOGADOR PERDEU TODAS AS VIDAS, CABOU O JOGO!
 						//FAZER AQUI UMA TELA DE GAMEOVER !!!!
-						System.out.println("PERDEU");
-						//estado = Estado.PERDEU;
+						estado = Estado.PERDEU;
+						Jogo.setGameOver(true);
+						System.out.println(estado);
 					} else {
-						reiniciar(); // Jogador perdeu
+						reiniciar(); // Jogador perdeu vida
 						vidas.setQntVidas(vidas.getQntVidas() - 1);
 					}
+
 				} else if (el.getModo() == Pizza.Modo.FUGINDO) {
 					el.setAtivo(false);
 					el.setModo(Pizza.Modo.FANTASMA);
@@ -278,6 +285,7 @@ public class JogoCenario extends CenarioPadrao {
 			}
 		}
 	}
+
 
 	private boolean validaDirecao(Direcao dir, Pizza el) {
 
@@ -576,9 +584,11 @@ public class JogoCenario extends CenarioPadrao {
 		el.setPy(novaPy);
 	}
 
-	public void reiniciarComVitoria() {
+	public void reiniciarComVitoria() { //tirar isso aqui depois
 		superPizza = false;
 		temporizadorFantasma = 0;
+		totalPastilha = 0;
+
 		prxDirecao = Direcao.OESTE;
 
 		pizza.setDirecao(Direcao.OESTE);
@@ -598,10 +608,13 @@ public class JogoCenario extends CenarioPadrao {
 		inimigos[3].setDirecao(Direcao.NORTE);
 		inimigos[3].setModo(Pizza.Modo.PRESO);
 		inimigos[3].setAtivo(false);
+		grade = copiaNivel(Nivel.cenario);
 
 		for (int lin = 0; lin < grade.length; lin++) {
 			for (int col = 0; col < grade[0].length; col++) {
-				if (grade[lin][col] == Nivel.PI) {
+				if (grade[lin][col] == Nivel.CN || grade[lin][col] == Nivel.SC) {
+					totalPastilha++; //270
+				} else if (grade[lin][col] == Nivel.PI) {
 					pizza.setPx(converteInidicePosicao(col));
 					pizza.setPy(converteInidicePosicao(lin));
 
@@ -621,11 +634,16 @@ public class JogoCenario extends CenarioPadrao {
 					inimigos[3].setPx(converteInidicePosicao(col));
 					inimigos[3].setPy(converteInidicePosicao(lin));
 
+				} else if (grade[lin][col] == Nivel.PF) {
+					pontoFugaCol = col;
+					pontoFugaLin = lin;
+
+				} else if (grade[lin][col] == Nivel.PV) {
+					pontoVoltaCol = col;
+					pontoVoltaLin = lin;
 				}
 			}
 		}
-
-
 	}
 
 	private void comePastilha(Elemento el) {
@@ -643,9 +661,9 @@ public class JogoCenario extends CenarioPadrao {
 			if (totalPastilha == 0) {
 				estado = Estado.JOGANDO;
 				reiniciarComVitoria();
+			}
 
-
-			} else if (grade[lin][col] == Nivel.SC){
+			if (grade[lin][col] == Nivel.SC){
 				superPizza(true);
 			}
 
@@ -700,7 +718,6 @@ public class JogoCenario extends CenarioPadrao {
 
 		if (fundo != null) {
 			//g.drawImage(fundo.getImage(), 0, ESPACO_TOPO, null);
-
 		} else {
 			for (int lin = 0; lin < grade.length; lin++) {
 				for (int col = 0; col < grade[0].length; col++) {
@@ -710,12 +727,11 @@ public class JogoCenario extends CenarioPadrao {
 						g.setColor(superPizza ? Color.DARK_GRAY : Color.BLUE);
 						g.fillRect(col * largEl, lin * largEl + ESPACO_TOPO, largEl, largEl);
 
-					} else if (valor == Nivel.CN) {
+					}else if (valor == Nivel.CN) {
 						g.setColor(Color.WHITE);
-						g.fillRect(col * largEl + espLinha, lin * largEl + espLinha + ESPACO_TOPO, largEl - espLinha * 2, largEl
-								- espLinha * 2);
+						g.fillRect(col * largEl + espLinha, lin * largEl + espLinha + ESPACO_TOPO, largEl - espLinha * 2, largEl - espLinha * 2);
 
-					} else if (valor == Nivel.SC) {
+					}else if (valor == Nivel.SC) {
 						g.setColor(Color.YELLOW);
 						g.fillRect(col * largEl + espLinha / 2, lin * largEl + espLinha / 2 + ESPACO_TOPO, largEl - espLinha, largEl - espLinha);
 
@@ -727,8 +743,8 @@ public class JogoCenario extends CenarioPadrao {
 			}
 		}
 
-		texto.desenha(g, "Pontos: " + pontos, 10, 20);
-		//texto.desenha(g,"Vidas:", 10, 540); //escrever coisas na tela
+		texto.desenha(g, "Pontos: " + pontos, 10, 20); //escrevendo os pontos na tela. parte de cima
+		texto.desenha(g, "Para pausar o jogo pressione Enter", 135, 540);
 
 		//FAZER AQUI A LOGICA DE SUMIR COM AS VIDAS NA TELA !!!!
 
@@ -742,7 +758,6 @@ public class JogoCenario extends CenarioPadrao {
 		} else if (vidas.getQntVidas() == 1) {
 			vidas.desenha(g, 10, 527,  16, 16); //mais a esquerda - terceira
 		}
-
 
 		pizza.desenha(g);
 

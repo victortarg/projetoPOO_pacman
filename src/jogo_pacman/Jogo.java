@@ -4,10 +4,13 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.swing.*;
 
 import jogo_pacman.base.CenarioPadrao;
+import jogo_pacman.JogoCenario;
+import jogo_pacman.base.Vidas;
 
 public class Jogo extends JFrame {
 
@@ -16,8 +19,15 @@ public class Jogo extends JFrame {
 	private static final int FPS = 1000 / 20;
 
 	private static final int JANELA_ALTURA = 550;
-
 	private static final int JANELA_LARGURA = 448;
+
+	public static int getJANELA_ALTURA() {
+		return JANELA_ALTURA;
+	}
+
+	public static int getJANELA_LARGURA() {
+		return JANELA_LARGURA;
+	}
 
 	private JPanel tela;
 
@@ -26,6 +36,17 @@ public class Jogo extends JFrame {
 	private BufferedImage buffer;
 
 	private CenarioPadrao cenario;
+	private final ImageIcon imagemPause = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png");
+	private Vidas vidas;
+	private static boolean gameOver = false;
+
+	public static boolean isGameOver() {
+		return gameOver;
+	}
+
+	public static void setGameOver(boolean gameOver) {
+		Jogo.gameOver = gameOver;
+	}
 
 	public enum Tecla {
 		CIMA, BAIXO, ESQUERDA, DIREITA, BA, BB, BC
@@ -98,7 +119,7 @@ public class Jogo extends JFrame {
 
 			@Override
 			public void paintComponent(Graphics g) {
-				g.drawImage(buffer, 0, 0, null); // vai desenhar meus jogo
+				g.drawImage(buffer, 0, 0, null); // vai desenhar meu jogo
 			}
 
 			@Override
@@ -134,10 +155,6 @@ public class Jogo extends JFrame {
 			if (System.currentTimeMillis() >= prxAtualizacao) {
 
 				g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
-
-//				ImageIcon fundoMenu = new ImageIcon("imagem\\testePACMAN.png");
-//				g2d.drawImage(fundoMenu.getImage(), JANELA_LARGURA, JANELA_ALTURA, null);
-
 				g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
 
 				if (controleTecla[Tecla.BA.ordinal()]) {
@@ -147,18 +164,17 @@ public class Jogo extends JFrame {
 						cenario = null;
 						cenario = new JogoCenario(tela.getWidth(), tela.getHeight());
 
-
 						g2d.setColor(Color.WHITE);
 						g2d.drawString("Carregando...", 20, 20);
 						tela.repaint();
 
 						cenario.carregar();
 
-						System.out.println("Executou !!");
-
 					} else {
 						Jogo.pausado = !Jogo.pausado;
+
 					}
+
 
 					liberaTeclas();
 
@@ -171,27 +187,33 @@ public class Jogo extends JFrame {
 
 						cenario = new InicioCenario(tela.getWidth(), tela.getHeight());
 						cenario.carregar();
+						gameOver = false;
 					}
 
 					liberaTeclas();
 
 				}
-
 				if (cenario == null) {
 					g2d.setColor(Color.WHITE);
 					g2d.drawString("Carregando...", 20, 20);
 
-
 				} else {
-					if (!Jogo.pausado)
+
+					if (!Jogo.pausado) { // executa depois de despausar o jogo
 						cenario.atualizar();
-
-					cenario.desenhar(g2d);
-
-					if (Jogo.pausado) {
-						g2d.setColor(Color.WHITE);
-						g2d.drawString("Pausado", tela.getWidth() / 2 - 30, tela.getHeight() / 2);
+						cenario.desenhar(g2d); //chama a função desenha. Que desenha o cenario
 					}
+
+					if (Jogo.pausado) { // tela de pause
+						g2d.setColor(Color.CYAN);
+						g2d.drawString("Jogo Pausado", tela.getWidth() / 2 - 50, tela.getHeight() / 2);
+						g2d.drawImage(imagemPause.getImage(),40, 10, null);
+					}
+				}
+
+				if (gameOver) {
+					g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
+					g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
 				}
 
 				tela.repaint();
@@ -199,6 +221,7 @@ public class Jogo extends JFrame {
 			}
 		}
 	}
+
 
 	public static void main(String[] args) {
 		Jogo jogo = new Jogo();

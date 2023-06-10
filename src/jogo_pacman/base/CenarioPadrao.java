@@ -3,7 +3,6 @@ package jogo_pacman.base;
 import java.awt.Graphics2D;
 
 public abstract class CenarioPadrao {
-
 	protected int altura, largura;
 
 	public CenarioPadrao(int largura, int altura) {
