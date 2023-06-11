@@ -9,8 +9,8 @@ public class Menu extends Texto {
 	private String rotulo;
 	private String[] opcoes;
 	private boolean selecionado;
-	private final ImageIcon imagemMenu = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png");
-	private final ImageIcon imagemPressEnter = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pressEnter.png");
+	private final ImageIcon imagemMenu = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png");//Copiar aqui o Absolet PATH
+	private final ImageIcon imagemPressEnter = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pressEnter.png");//Copiar aqui o Absolet PATH
 
 	public Menu(String rotulo) {
 		super();

@@ -1,6 +1,8 @@
 package jogo_pacman;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -12,6 +14,7 @@ import javax.swing.*;
 
 import jogo_pacman.base.CenarioPadrao;
 import jogo_pacman.JogoCenario;
+import jogo_pacman.base.RankingPanel;
 import jogo_pacman.base.Vidas;
 
 public class Jogo extends JFrame {
@@ -31,10 +34,12 @@ public class Jogo extends JFrame {
 	private Graphics2D g2d;
 
 	private BufferedImage buffer;
+	private Ranking rank;
+	private RankingPanel rankingPanel;
 
 	private CenarioPadrao cenario;
-	private final ImageIcon imagemPause = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png");
-	private final ImageIcon imagemGameOver = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\gameOver.png");
+	private final ImageIcon imagemPause = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png"); //Copiar aqui o Absolet PATH
+	private final ImageIcon imagemGameOver = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\gameOver.png"); //Copiar aqui o Absolet PATH
 	private Vidas vidas;
 	private static boolean gameOver = false;
 
@@ -133,21 +138,28 @@ public class Jogo extends JFrame {
 		entradaNome = new JTextField(15);
 		btSalvar = new JButton("Salvar");
 		lblNome = new JLabel("Nome Jogador");
+		rank = new Ranking();
+		rankingPanel = new RankingPanel(rank.getRank());
+
+		rank.loadRanking();
 
 
 		getContentPane().add(tela);
 		tela.add(entradaNome);
 		tela.add(btSalvar);
 		tela.add(lblNome);
+		tela.add(rankingPanel);
 
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();
 		setVisible(true);
+
 		entradaNome.setVisible(false);
 		btSalvar.setVisible(false);
 		lblNome.setVisible(false);
+		rankingPanel.setVisible(false);
 
 		tela.repaint();
 
@@ -161,6 +173,7 @@ public class Jogo extends JFrame {
 	public void iniciarJogo() {
 		long prxAtualizacao = 0;
 
+		int somador = 0;
 		while (true) {
 			if (System.currentTimeMillis() >= prxAtualizacao) {
 
@@ -173,6 +186,7 @@ public class Jogo extends JFrame {
 						cenario.descarregar();
 						cenario = null;
 						cenario = new JogoCenario(tela.getWidth(), tela.getHeight());
+
 
 						g2d.setColor(Color.WHITE);
 						g2d.drawString("Carregando...", 20, 20);
@@ -199,6 +213,7 @@ public class Jogo extends JFrame {
 						cenario.carregar();
 
 						gameOver = false;
+						somador = 0;
 						entradaNome.setVisible(false);
 						btSalvar.setVisible(false);
 						lblNome.setVisible(false);
@@ -226,33 +241,57 @@ public class Jogo extends JFrame {
 				}
 
 				if (gameOver) {
+					somador++;
 					//FAZER AQUIIIII A TELA DE GAMEOVER
 
-					g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
-					g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
-					g2d.drawImage(imagemGameOver.getImage(), 120, 10, 200, 230,  null);
-					g2d.drawImage(imagemPause.getImage(),40, -50,null);
+						g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
+						g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
+						g2d.drawImage(imagemGameOver.getImage(), 120, 10, 200, 230,  null);
+						g2d.drawImage(imagemPause.getImage(),40, -50,null);
 
 
+						entradaNome.setLocation(140, 450);
+						entradaNome.setVisible(true);
 
-					entradaNome.setLocation(140, 450);
-					entradaNome.setVisible(true);
 
-					btSalvar.setSize(70, 20);
-					btSalvar.setLocation(190, 475);
-//					btSalvar.addActionListener();
-					btSalvar.setVisible(true);
+						lblNome.setLocation(185, 430);
+						lblNome.setForeground(Color.WHITE);
+						lblNome.setVisible(true);
 
-					lblNome.setLocation(185, 430);
-					lblNome.setForeground(Color.WHITE);
-					lblNome.setVisible(true);
 
+						btSalvar.setSize(70, 20);
+						btSalvar.setLocation(190, 475);
+
+
+					if (somador == 1) {
+						btSalvar.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+
+								String nome = entradaNome.getText();
+								rank.updateRanking(nome, cenario.getPontos());
+								rank.saveRanking();
+
+								rankingPanel.setLocation(40, 170);
+								rankingPanel.setSize(400, 250);
+								rankingPanel.setBackground(Color.BLACK);
+
+
+							}
+						});
+
+
+						rankingPanel.setVisible(true);
+						btSalvar.setVisible(true);
+					}
 				}
+
 
 				tela.repaint();
 				prxAtualizacao = System.currentTimeMillis() + FPS;
 			}
 		}
+
+
 	}
 
 

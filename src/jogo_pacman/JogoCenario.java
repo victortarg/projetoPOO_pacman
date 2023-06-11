@@ -77,7 +77,7 @@ public class JogoCenario extends CenarioPadrao {
 
 		//pacman
 		pizza = new Pizza(0, 0, largEl, largEl); //Criando a bolinha com os parematros, (px,py, altura e largura)
-		pizza.setVel(10); // setando a velocidade de movimento do pacman
+		pizza.setVel(5); // setando a velocidade de movimento do pacman
 		pizza.setAtivo(true); //Ativa ou desativa a colisão
 		pizza.setCor(Color.YELLOW); //setando a cor do pacman
 		pizza.setDirecao(Direcao.OESTE); //nao sei para que serve isso !!
@@ -782,12 +782,12 @@ public class JogoCenario extends CenarioPadrao {
 
 	}
 
-//	public int getPontos() {
-//		return pontos;
-//	}
-//
-//	public void setPontos(int pontos) {
-//		this.pontos = pontos;
-//	}
+	public int getPontos() {
+		return pontos;
+	}
+
+	public void setPontos(int pontos) {
+		this.pontos = pontos;
+	}
 
 }
