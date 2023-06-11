@@ -265,13 +265,10 @@ public class JogoCenario extends CenarioPadrao {
 			if (Util.colide(pizza, el)) { //PIZZA É REFERENTE AO PACMAN, EL É O INIMIGO
 				//isso aqui ta dentro do metodo ATUALIZAR
 				if (el.getModo() == Pizza.Modo.CACANDO) {
-					//FAZER AQUI O RESET DO JOGO CASO O JOGADOR COMA TODAS AS PASTILHAS ??????? SPOILER: NÃO É AQUI
+					
 					if (vidas.getQntVidas() == 0){
-						//JOGADOR PERDEU TODAS AS VIDAS, CABOU O JOGO!
-						//FAZER AQUI UMA TELA DE GAMEOVER !!!!
 						estado = Estado.PERDEU;
 						Jogo.setGameOver(true);
-						System.out.println(estado);
 					} else {
 						reiniciar(); // Jogador perdeu vida
 						vidas.setQntVidas(vidas.getQntVidas() - 1);
@@ -584,10 +581,10 @@ public class JogoCenario extends CenarioPadrao {
 		el.setPy(novaPy);
 	}
 
-	public void reiniciarComVitoria() { //tirar isso aqui depois
+	public void reiniciarComVitoria() {
 		superPizza = false;
 		temporizadorFantasma = 0;
-		totalPastilha = 0;
+		totalPastilha = -1;
 
 		prxDirecao = Direcao.OESTE;
 
@@ -784,5 +781,13 @@ public class JogoCenario extends CenarioPadrao {
 		}
 
 	}
+
+//	public int getPontos() {
+//		return pontos;
+//	}
+//
+//	public void setPontos(int pontos) {
+//		this.pontos = pontos;
+//	}
 
 }

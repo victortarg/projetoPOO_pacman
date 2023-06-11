@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -21,15 +23,10 @@ public class Jogo extends JFrame {
 	private static final int JANELA_ALTURA = 550;
 	private static final int JANELA_LARGURA = 448;
 
-	public static int getJANELA_ALTURA() {
-		return JANELA_ALTURA;
-	}
-
-	public static int getJANELA_LARGURA() {
-		return JANELA_LARGURA;
-	}
-
 	private JPanel tela;
+	private JTextField entradaNome;
+	private JLabel lblNome;
+	private JButton btSalvar;
 
 	private Graphics2D g2d;
 
@@ -37,6 +34,7 @@ public class Jogo extends JFrame {
 
 	private CenarioPadrao cenario;
 	private final ImageIcon imagemPause = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\pngegg.png");
+	private final ImageIcon imagemGameOver = new ImageIcon("C:\\Users\\victo\\CodigoFontes\\CodigosFontes\\Java\\pac_manOriginal\\src\\imagem\\gameOver.png");
 	private Vidas vidas;
 	private static boolean gameOver = false;
 
@@ -132,12 +130,24 @@ public class Jogo extends JFrame {
 				return getPreferredSize();
 			}
 		};
+		entradaNome = new JTextField(15);
+		btSalvar = new JButton("Salvar");
+		lblNome = new JLabel("Nome Jogador");
+
 
 		getContentPane().add(tela);
+		tela.add(entradaNome);
+		tela.add(btSalvar);
+		tela.add(lblNome);
+
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		pack();
 		setVisible(true);
+		entradaNome.setVisible(false);
+		btSalvar.setVisible(false);
+		lblNome.setVisible(false);
 
 		tela.repaint();
 
@@ -187,7 +197,11 @@ public class Jogo extends JFrame {
 
 						cenario = new InicioCenario(tela.getWidth(), tela.getHeight());
 						cenario.carregar();
+
 						gameOver = false;
+						entradaNome.setVisible(false);
+						btSalvar.setVisible(false);
+						lblNome.setVisible(false);
 					}
 
 					liberaTeclas();
@@ -212,8 +226,27 @@ public class Jogo extends JFrame {
 				}
 
 				if (gameOver) {
+					//FAZER AQUIIIII A TELA DE GAMEOVER
+
 					g2d.setColor(Color.BLACK); //MUDA A COR DO FUNDO (DEIXAR PRETO)
 					g2d.fillRect(0, 0, JANELA_LARGURA, JANELA_ALTURA);
+					g2d.drawImage(imagemGameOver.getImage(), 120, 10, 200, 230,  null);
+					g2d.drawImage(imagemPause.getImage(),40, -50,null);
+
+
+
+					entradaNome.setLocation(140, 450);
+					entradaNome.setVisible(true);
+
+					btSalvar.setSize(70, 20);
+					btSalvar.setLocation(190, 475);
+//					btSalvar.addActionListener();
+					btSalvar.setVisible(true);
+
+					lblNome.setLocation(185, 430);
+					lblNome.setForeground(Color.WHITE);
+					lblNome.setVisible(true);
+
 				}
 
 				tela.repaint();
